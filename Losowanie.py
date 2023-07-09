@@ -22,7 +22,7 @@ def gdzie():
 #             Spisy             #
 #################################
 pd = None  # Doświadczenie zyskiwane w trakcie tworzenia
-rasa = None
+#rasa = None
 rasy = ('Człowiek', 'Niziołek', 'Krasnolud', 'Wysoki elf', 'Leśny elf')
 
 # klasy
