@@ -1,36 +1,3 @@
-"""
-Tworzenie postaci
-PLAN RAMOWY
-
-RASA
-1. Rzut k100
-2. wybór rasy po rzucie
-3. / późniejszy etap: +20 pd przy akceptacji pierwszego rzutu
-4. / ponów rzut lub zaakceptuj
-
-PROFESJA
-1. Rzut k 100
-2. Wybór listy na podstawie rasy
-3. / późniejszy etap: +50 przy pierwszum wyborze
-4./ Akceptacja lub rzut
-5. /    Kolejne rzutu z innymi pd
-
-ATRYBUTY
-1. Rzut 2k10 * 10 cech
-2. uwzględnienie rasy
-3. / +50 pd
-4. / Zamiana miejscami wyników
-5./ +25 pd
-6 / ponowne rzuty lub ręczny rozkład 100 pt.
-
-TABELA POSTACI
-Podsumowanie wyników.
-"""
-
-# Tworzenie postaci
-
-# PLAN RAMOWY
-
 from random import randint
 import os
 
@@ -43,8 +10,7 @@ import inspect
 
 def gdzie():
     # https://stackoverflow.com/questions/6810999/how-to-determine-file-function-and-line-number
-    callerframerecord = inspect.stack()[1]    # 0 represents this line
-                                            # 1 represents line at caller
+    callerframerecord = inspect.stack()[1]    # 0 represents this line, # 1 represents line at caller
     frame = callerframerecord[0]
     info = inspect.getframeinfo(frame)
     return str(info.lineno)
@@ -78,67 +44,85 @@ profesja = None
 #################################
 
 
-# oczyść ekran
-def czysc():
+def czysc():  # oczyść ekran
     os.system('cls' if os.name == 'nt' else 'clear')
     print('')
 
 
-def kosc(k=100):
+def kosc(k=100):  # rzut kością
     rzut = randint(1, k)
     return rzut
 
 
-def akceptacja():
+def akceptacja(pytanie='Akceptujesz wynik rzutu? (T/N)', *args):
+    if len(args) == 0:
+        args = list(args)
+        args.append('t')
+        args.append('n')
     while True:
         try:
-            tresc = input('\n Akceptujesz wynik rzutu? (T/N)\n ')
-            print(tresc)  # temp
-            if tresc == 't' or tresc == 'n':
+            tresc = input('\n ' + pytanie + '\n ')
+            if tresc.lower() in args:
                 return tresc
             else:
                 raise ValueError
-            #if tresc != 't' or tresc != 'n':
-            #    raise ValueError
-            #return tresc
         except ValueError:
             continue
 
 
+#################################
+#      Mechanika postaci        #
+#################################
+def los_rasy(rzut):
+    if rzut > 90:
+        if 91 <= rzut <= 94:
+            rasa_postaci = rasy[1]
+        elif 95 <= rzut <= 98:
+            rasa_postaci = rasy[2]
+        elif rzut == 99:
+            rasa_postaci = rasy[3]
+        elif rzut == 100:
+            rasa_postaci = rasy[4]
+    else:
+        rasa_postaci = rasy[0]
+    print(" Wynik:" + str(rzut) + " – " + rasa_postaci)
+    return rasa_postaci
+
+
+print("--- linia " + gdzie() + ' ---')
 # RASA
 # 1. Rzut k100
-
-
-k100 = kosc()
+rasa = los_rasy(kosc())
 
 # 2. wybór rasy po rzucie
-
-if k100 <= 90:
-    rasa = rasy[0]
-elif 91 <= k100 <= 94:
-    rasa = rasy[1]
-elif 95 <= k100 <= 98:
-    rasa = rasy[2]
-elif k100 == 99:
-    rasa = rasy[3]
-elif k100 == 100:
-    rasa = rasy[4]
-else:
-    rasa = 'bład'
-print("Wynik:" + str(k100) + " – " + rasa)
-# 3. / późniejszy etap: +20 pd przy akceptacji pierwszego rzutu
-
-pyt = akceptacja()
-if pyt == 't':
+if akceptacja() == 't':
     # przejście dalej i dodanie pd
-    print('wybrano tak')
-    # pass
+    pd += 20
+    # dodanie rasy do klasy Postac()
+    # XXXX = rasa_postaci
 else:
     # ponowne wykonanie rzutu lub ręczny wybór
-    print('Wybrano nie')
-    # pass
+    if akceptacja('Nowy rzut [N], czy ręczny wybór [R]?', 'n', 'r') == 'n':
+        # nowy rzut na rasę
+        rasa = los_rasy(kosc())
+    else:
+        # Samodzielny wybór rasy
+        tekst = ' Wybierz rasę: \n 1.' + rasy[0] + '    2.' + rasy[1] + '\n 3.' + rasy[2] + '   4.' + rasy[3] +\
+                '\n 5.' + rasy[4]
+        reczny_wybor = akceptacja(tekst, '1', '2', '3', '4', '5')
+        if reczny_wybor != '1':
+            if reczny_wybor == '2':
+                rasa = rasy[1]
+            elif reczny_wybor == '3':
+                rasa = rasy[2]
+            elif reczny_wybor == '4':
+                rasa = rasy[3]
+            elif reczny_wybor == '5':
+                rasa = rasy[4]
+        else:
+            rasa = rasy[0]
 print("--- linia " + gdzie() + ' ---')
-# 4. / ponów rzut lub zaakceptuj
+
 
 # PROFESJA
 
