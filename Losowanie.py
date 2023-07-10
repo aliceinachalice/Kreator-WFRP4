@@ -22,8 +22,8 @@ def gdzie():
 #             Spisy             #
 #################################
 pd = None  # Doświadczenie zyskiwane w trakcie tworzenia
-#rasa = None
-rasy = ('Człowiek', 'Niziołek', 'Krasnolud', 'Wysoki elf', 'Leśny elf')
+# rasa = None
+rasy = ('Człowiek', 'Krasnolud', 'Niziołek', 'Wysoki elf', 'Leśny elf')
 
 # klasy
 uczeni = ('Aptekarka', "Czarodziej", 'Inżynier', 'Kapłan', 'Medyczka', 'Mniszka', 'Prawniczka', 'Uczony')
@@ -76,9 +76,9 @@ def akceptacja(pytanie='Akceptujesz wynik rzutu? (T/N)', *args):
 def los_rasy(rzut):
     if rzut > 90:
         if 91 <= rzut <= 94:
-            rasa_postaci = rasy[1]
-        elif 95 <= rzut <= 98:
             rasa_postaci = rasy[2]
+        elif 95 <= rzut <= 98:
+            rasa_postaci = rasy[1]
         elif rzut == 99:
             rasa_postaci = rasy[3]
         elif rzut == 100:
