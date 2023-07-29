@@ -14,7 +14,7 @@ def gdzie():
     info = inspect.getframeinfo(frame)
     return str(info.lineno)
     # print(info.lineno)                        # __LINE__     -> 13
-    # print("--- linia " + gdzie() + ' ---')  # wkleić w miejscu testu
+    # print(f'--- linia {gdzie()}  ---')  # wkleić w miejscu testu
 
 
 #################################
@@ -55,6 +55,8 @@ def kosc(k=100):  # rzut kością
 
 
 def akceptacja(pytanie='Akceptujesz wynik rzutu? (T/N)', *args):
+    if len(args) == 1:
+        args = str(args[0])
     if len(args) == 0:
         args = list(args)
         args.append('t')
@@ -70,7 +72,7 @@ def akceptacja(pytanie='Akceptujesz wynik rzutu? (T/N)', *args):
             continue
 
 
-def prof_rasowe():
+def prof_rasowe():  # tworzy listę profesji dostęną dla rasy
     for i in range(1, 101):
         prof = profesje(i, rasa)
         lista.append(prof)
@@ -79,7 +81,7 @@ def prof_rasowe():
             lista.remove(prof)
 
 
-def grupa_prof():
+def grupa_prof():  # pozwala na ręczy wybór profesji
     licz = 1
     while licz <= len(lista):
         # tu jest miejsce na czyszczenie ekranu czysc()
@@ -270,7 +272,6 @@ def profesje(rzut, r_post):  # zakres profesji zależnie od rasy postaci
 #####################################
 #       Tworzenie postaci           #
 #####################################
-print("--- linia " + gdzie() + ' ---')
 # RASA
 # 1. Rzut k100
 rasa = los_rasy(kosc())
@@ -290,7 +291,6 @@ else:  # ponowne wykonanie rzutu lub ręczny wybór
         print(rasa)  # temp
 # dodanie rasy do klasy Postac()
 # XXXX = rasa_postaci
-print("--- linia " + gdzie() + ' ---')
 
 # PROFESJA
 # 1. Rzut k 100
@@ -318,75 +318,117 @@ else:  # wykonanie dodatkowych rzutów lub ręczny wybór
 
 
 print(rasa, prof_post, 'PD : ', pd)
-print("--- linia " + gdzie() + ' ---')
 # 5. /    Kolejne rzutu z innymi pd
 
 # ATRYBUTY
 # 1. Rzut 2k10 * 10 cech
+cechy = ('WW', 'US', 'S', 'Wt', 'I', 'Zw', 'Int', 'SW', 'Ogd')
+rzuty = []    # WW, US, S, Wt, In, Zw, Int, SW, Ogd
+for i in range(0, 9):
+    rzuty.append(kosc(10) + kosc(10))  # dodać do pętli niżej
 
-WW = kosc(10) + kosc(10)
-US = kosc(10) + kosc(10)
-S = kosc(10) + kosc(10)
-Wt = kosc(10) + kosc(10)
-In = kosc(10) + kosc(10)
-Zw = kosc(10) + kosc(10)
-Zr = kosc(10) + kosc(10)
-Int = kosc(10) + kosc(10)
-SW = kosc(10) + kosc(10)
-Ogd = kosc(10) + kosc(10)
-
-print(WW, US, S, Wt, In, Zw, Int, SW, Ogd)
 # 2. uwzględnienie rasy
-if rasa == rasy[0]:
-    WW += 20
-    US += 20
-    S += 20
-    Wt += 20
-    In += 20
-    Zw += 20
-    Zr += 20
-    Int += 20
-    SW += 20
-    Ogd += 20
+mod_rasowy = []
+mod_r_ludz = (20, 20, 20, 20, 20, 20, 20, 20, 20, 20)  # WW, US, S, Wt, In, Zw, Int, SW, Ogd
+mod_r_kras = (30, 20, 20, 30, 20, 10, 30, 20, 40, 10)
+mod_r_niz = (10, 30, 10, 20, 20, 20, 30, 20, 30, 30)
+mod_r_elf = (30, 30, 20, 20, 40, 30, 30, 30, 30, 20)
+if rasa == rasy[0]:  # Przenieść bezpośrednio do wyboru rasy
+    mod_rasowy = mod_r_ludz
 elif rasa == rasy[1]:
-    WW += 30
-    US += 20
-    S += 20
-    Wt += 30
-    In += 20
-    Zw += 10
-    Zr += 30
-    Int += 20
-    SW += 40
-    Ogd += 10
+    mod_rasowy = mod_r_kras
 elif rasa == rasy[2]:
-    WW += 10
-    US += 30
-    S += 10
-    Wt += 20
-    In += 20
-    Zw += 20
-    Zr += 30
-    Int += 20
-    SW += 30
-    Ogd += 30
+    mod_rasowy = mod_r_niz
 elif rasa == rasy[3] or rasy[4]:
-    WW += 30
-    US += 30
-    S += 20
-    Wt += 20
-    In += 40
-    Zw += 30
-    Zr += 30
-    Int += 30
-    SW += 30
-    Ogd += 20
+    mod_rasowy = mod_r_elf
 
-print(WW, US, S, Wt, In, Zw, Int, SW, Ogd)
+# Część właściwa
+tekst = ''
+tekst2 = ''
+for i in range(0, 9):
+    tekst += f' {cechy[i]}: {rzuty[i]:02d}'
+    tekst2 += f' {cechy[i]}: {rzuty[i] + mod_rasowy[i]}'
+
+print(f' Twoje rzuty na cechy:\n {tekst}\n\n Po uwzględnieniu rasy ({rasa}):\n {tekst2}')
 # 3. / +50 pd
-# 4. / Zamiana miejscami wyników
-# 5./ +25 pd
+if akceptacja() == 't':
+    # przejście dalej i dodanie pd
+    # pętla dodająca wartości rasowe do rzutów/ dać to na koniec?
+    pd += 50
+else:
+    # 4. / Zamiana miejscami wyników
+
+    # pyta o zmianę kolejności, lub ręczne przypisanie z puli
+    if akceptacja('Zamienić rzuty miejscami [Z], czy rozdzielić jako 100 pt? [R]', 'z', 'r') == 'z':
+        # W pętli:
+        while True:
+            pula_start = rzuty  # wartośći tymczasowe
+            pula_koniec = []
+            tekst = tekst2 = ''
+            for i in range(0, 9):
+                print(f' Twoje rzuty na cechy:\n {tekst}\n\n Po uwzględnieniu rasy ({rasa}):\n {tekst2}')
+                wybor = akceptacja(f'{pula_start}\n Wybierz wartość dla {cechy[i]}.', pula_start)
+                pula_koniec.append(int(wybor))  # zamienić kolejność
+                pula_start.remove(int(wybor))  # obsługa błedu wartości
+                tekst += f' {cechy[i]}: {pula_koniec[i]:02d}'
+                tekst2 += f' {cechy[i]}: {pula_koniec[i] + mod_rasowy[i]}'
+            if akceptacja('Akceptujesz ten układ? (T/N)') == 't':  # dodać aktualny wygląd puli
+                pd += 25
+                break
+            else:
+                continue
+        #            #  wyświetla pólę rzutów
+        #            # pyta o kolejne cechy i kaze przypisać jeden z wyników
+        #            # w nagłówku pokazuje wartości  już przypisane
+        #        # pyta o akceptację układu i kończy lub zaczyna od początku
+        #        # ponownie pyta o ręczny wybór
+    else:  # ręczny układ
+        # W pętli:
+        while True:
+            punkty = 100  # wyświetla pólę punktów = 100
+            pula_koniec = []
+            tekst = ''
+            tekst2 = ''
+            zakresy = (4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18)
+            for i in range(0, 9):
+                # pyta o kolejne cechy i kaze przypisać punkty w zakresie 4-18
+                zapas = (len(cechy) - (len(pula_koniec) + 1)) * 4  # Zapas punktów dla minimum
+                # punkty powyżej zapasu
+                zasob = punkty - zapas
+                if zasob > 18:
+                    maks = 18
+                else:
+                    maks = zasob
+                    #  tworzy listę dla zakresu
+                    zakresy = []
+                    for z in range(4, maks + 1):
+                        zakresy.append(str(z))
+                # pyta o kolejne cechy i kaze przypisać punkty w zakresie 4-18
+                print(f' Punkty: {punkty}\n Twoje punkty na cechy:\n {tekst}\n\n Po uwzględnieniu rasy ({rasa}):\n \
+{tekst2}')
+                wybor = akceptacja(f' Przypisz do cechy {cechy[i]} punkty w zakresie 4-{maks}',
+                                   zakresy)
+                pula_koniec.append(int(wybor))
+                punkty -= int(wybor)
+                tekst += f' {cechy[i]}: {pula_koniec[i]:02d}'
+                tekst2 += f' {cechy[i]}: {pula_koniec[i] + mod_rasowy[i]}'
+            if punkty > 0:
+                akceptacja(f' Nie wydano wszystkich punktów. Pozostało: {punkty}. Naciśnij wpisz [t], aby kontynuować')
+                continue
+            if akceptacja('Czy taki rozkład punktów jest dobry?') == 't':
+                break
+            else:
+                continue
+
+    # 5./ +25 pd
 # 6 / ponowne rzuty lub ręczny rozkład 100 pt.
+#    # Przebieg:
+#        # W pętli:
+#            #  wyświetla pólę punktó = 100
+#            # pyta o kolejne cechy i kaze przypisać punkty w zakresie 4-18
+#            # w nagłówku pokazuje wartości  już przypisane
+#            # pilnuje by zostało dość pt na kolejne cechy min 4/cecha
+#       # pyta o akceptację układu i kończy lub zaczyna od początku
 
 # TABELA POSTACI
 # Podsumowanie wyników.
@@ -394,7 +436,3 @@ print(WW, US, S, Wt, In, Zw, Int, SW, Ogd)
 # Przydasie
 
 # liczba z wiodącym zerem
-'''
-print(f"{US:02d}")
-zz = f"{US:02d}"
-print(zz)'''
