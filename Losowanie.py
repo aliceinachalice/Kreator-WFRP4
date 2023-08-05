@@ -39,6 +39,13 @@ klasa = (uczeni, mieszczanie, dworzanie, pospolstwo, wedrowcy, wodniacy, lotry, 
 prof_post = None
 lista = []  # używane do ręcznego wyboru profesji
 
+mod_rasowy = []
+mod_r_ludz = (20, 20, 20, 20, 20, 20, 20, 20, 20, 20)  # WW, US, S, Wt, In, Zw, Int, SW, Ogd
+mod_r_kras = (30, 20, 20, 30, 20, 10, 30, 20, 40, 10)
+mod_r_niz = (10, 30, 10, 20, 20, 20, 30, 20, 30, 30)
+mod_r_elf = (30, 30, 20, 20, 40, 30, 30, 30, 30, 20)
+
+
 #################################
 #           Narzędzia           #
 #################################
@@ -123,11 +130,12 @@ def los_rasy(rzut):  # Przydział razy postaci
             rasa_postaci = rasy[4]
     else:
         rasa_postaci = rasy[0]
-    print(" Wynik:" + str(rzut) + " – " + rasa_postaci)
+    print(f' Wynik: {str(rzut)} - {rasa_postaci}')  # Wynieść poza funkcję
     return rasa_postaci
 
 
 def profesje(rzut, r_post):  # zakres profesji zależnie od rasy postaci
+    # UCZENI
     if (rzut == 1 and r_post == rasy[0]) or (rzut == 1 and r_post == rasy[1]) or (rzut == 1 and r_post == rasy[2]):
         profesja = klasa[0][0]
     elif rzut == 2 and r_post == rasy[0]:
@@ -276,28 +284,34 @@ def profesje(rzut, r_post):  # zakres profesji zależnie od rasy postaci
 # 1. Rzut k100
 rasa = los_rasy(kosc())
 # 2. wybór rasy po rzucie
-if akceptacja() == 't':
-    # przejście dalej i dodanie pd
+if akceptacja() == 't':  # przejście dalej i dodanie pd
     pd += 20
 else:  # ponowne wykonanie rzutu lub ręczny wybór
     # dodać tu pętlę while do kolejnych rzutów?
     if akceptacja('Nowy rzut [N], czy ręczny wybór [R]?', 'n', 'r') == 'n':  # nowy rzut na rasę
         rasa = los_rasy(kosc())
     else:  # Samodzielny wybór rasy
-        tekst = 'Wybierz rasę: \n 1.' + rasy[0] + '    2.' + rasy[1] + '\n 3.' + rasy[2] + '    4.' + rasy[3] +\
-                '\n 5.' + rasy[4]
+        tekst = f' Wybierz rasę:\n 1. {rasy[0]:12} 2. {rasy[1]:12}\n 3. {rasy[2]:12} 4. {rasy[3]:12}\n 5. {rasy[4]:12}'
         reczny_wybor = akceptacja(tekst, '1', '2', '3', '4', '5')
-        rasa = rasy[int(reczny_wybor)-1]
-        print(rasa)  # temp
+        rasa = rasy[int(reczny_wybor) - 1]
+
+if rasa == rasy[0]:  # modyfikator rasowy
+    mod_rasowy = mod_r_ludz
+elif rasa == rasy[1]:
+    mod_rasowy = mod_r_kras
+elif rasa == rasy[2]:
+    mod_rasowy = mod_r_niz
+elif rasa == rasy[3] or rasy[4]:
+    mod_rasowy = mod_r_elf
 # dodanie rasy do klasy Postac()
-# XXXX = rasa_postaci
+# XXX.X = rasa_postaci
 
 # PROFESJA
 # 1. Rzut k 100
 k100 = kosc()
 # 2. Wybór listy na podstawie rasy
 prof1 = profesje(k100, rasa)
-print(' Rzut:' + str(k100) + ' - ' + prof1)
+print(f' Rzut: {k100} - {prof1}')
 if akceptacja() == 't':
     prof_post = prof1
     pd += 50  # pd za wybór pierwszego rzutu
@@ -306,8 +320,8 @@ else:  # wykonanie dodatkowych rzutów lub ręczny wybór
     k100c = kosc()
     prof2 = profesje(k100b, rasa)
     prof3 = profesje(k100c, rasa)
-    tekst = 'Czy któryś z tych rzutów jest satysfakcjonujący?\n ' + str(k100) + '. ' + prof1 + '\n ' + str(k100b)\
-            + '. ' + prof2 + '\n ' + str(k100c) + '. ' + prof3 + '\n [R] - Ręczny wybór'
+    tekst = (f'Czy któryś z tych rzutów jest satysfakcjonujący?\n {k100}. {prof1}\n {k100b}. {prof2}\n'
+             f' {k100c}. {prof3}\n [R] - Ręczny wybór')
     reczny_wybor = akceptacja(tekst, str(k100), str(k100b), str(k100c), 'r')
     if reczny_wybor != 'r':  # wybrano jeden z rzutów
         prof_post = profesje(int(reczny_wybor), rasa)
@@ -327,22 +341,6 @@ rzuty = []    # WW, US, S, Wt, In, Zw, Int, SW, Ogd
 for i in range(0, 9):
     rzuty.append(kosc(10) + kosc(10))  # dodać do pętli niżej
 
-# 2. uwzględnienie rasy
-mod_rasowy = []
-mod_r_ludz = (20, 20, 20, 20, 20, 20, 20, 20, 20, 20)  # WW, US, S, Wt, In, Zw, Int, SW, Ogd
-mod_r_kras = (30, 20, 20, 30, 20, 10, 30, 20, 40, 10)
-mod_r_niz = (10, 30, 10, 20, 20, 20, 30, 20, 30, 30)
-mod_r_elf = (30, 30, 20, 20, 40, 30, 30, 30, 30, 20)
-if rasa == rasy[0]:  # Przenieść bezpośrednio do wyboru rasy
-    mod_rasowy = mod_r_ludz
-elif rasa == rasy[1]:
-    mod_rasowy = mod_r_kras
-elif rasa == rasy[2]:
-    mod_rasowy = mod_r_niz
-elif rasa == rasy[3] or rasy[4]:
-    mod_rasowy = mod_r_elf
-
-# Część właściwa
 tekst = ''
 tekst2 = ''
 for i in range(0, 9):
@@ -365,23 +363,21 @@ else:
             pula_start = rzuty  # wartośći tymczasowe
             pula_koniec = []
             tekst = tekst2 = ''
-            for i in range(0, 9):
+            for i in range(0, 9):  # pyta o kolejne cechy i kaze przypisać jeden z wyników
+                #  wyświetla pólę rzutów
                 print(f' Twoje rzuty na cechy:\n {tekst}\n\n Po uwzględnieniu rasy ({rasa}):\n {tekst2}')
                 wybor = akceptacja(f'{pula_start}\n Wybierz wartość dla {cechy[i]}.', pula_start)
                 pula_koniec.append(int(wybor))  # zamienić kolejność
                 pula_start.remove(int(wybor))  # obsługa błedu wartości
-                tekst += f' {cechy[i]}: {pula_koniec[i]:02d}'
+                tekst += f' {cechy[i]}: {pula_koniec[i]:02d}'  # pokazuje wartości już przypisane
                 tekst2 += f' {cechy[i]}: {pula_koniec[i] + mod_rasowy[i]}'
-            if akceptacja('Akceptujesz ten układ? (T/N)') == 't':  # dodać aktualny wygląd puli
+            # pyta o akceptację układu i kończy lub zaczyna od początku
+            if akceptacja(f'Akceptujesz ten układ? (T/N)\n {tekst}\n {tekst2}') == 't':
                 pd += 25
                 break
             else:
                 continue
-        #            #  wyświetla pólę rzutów
-        #            # pyta o kolejne cechy i kaze przypisać jeden z wyników
-        #            # w nagłówku pokazuje wartości  już przypisane
-        #        # pyta o akceptację układu i kończy lub zaczyna od początku
-        #        # ponownie pyta o ręczny wybór
+
     else:  # ręczny układ
         # W pętli:
         while True:
@@ -404,8 +400,8 @@ else:
                     for z in range(4, maks + 1):
                         zakresy.append(str(z))
                 # pyta o kolejne cechy i kaze przypisać punkty w zakresie 4-18
-                print(f' Punkty: {punkty}\n Twoje punkty na cechy:\n {tekst}\n\n Po uwzględnieniu rasy ({rasa}):\n \
-{tekst2}')
+                print(f' Punkty: {punkty}\n Twoje punkty na cechy:\n {tekst}\n\n Po uwzględnieniu rasy ({rasa}):\n'
+                      f' {tekst2}')
                 wybor = akceptacja(f' Przypisz do cechy {cechy[i]} punkty w zakresie 4-{maks}',
                                    zakresy)
                 pula_koniec.append(int(wybor))
@@ -420,19 +416,5 @@ else:
             else:
                 continue
 
-    # 5./ +25 pd
-# 6 / ponowne rzuty lub ręczny rozkład 100 pt.
-#    # Przebieg:
-#        # W pętli:
-#            #  wyświetla pólę punktó = 100
-#            # pyta o kolejne cechy i kaze przypisać punkty w zakresie 4-18
-#            # w nagłówku pokazuje wartości  już przypisane
-#            # pilnuje by zostało dość pt na kolejne cechy min 4/cecha
-#       # pyta o akceptację układu i kończy lub zaczyna od początku
-
 # TABELA POSTACI
 # Podsumowanie wyników.
-
-# Przydasie
-
-# liczba z wiodącym zerem
