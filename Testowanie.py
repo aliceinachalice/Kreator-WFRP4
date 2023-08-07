@@ -57,7 +57,7 @@ class Postac:
 '''
 
 
-def tabela():
+def tabela(wiad=''):
     # Tabela ma szerokość 99 znaków plus spacja na początku jako odstęp od krawędzi okna.
     line = '─'
     plc = ''  # paceholder
@@ -81,9 +81,10 @@ def tabela():
     print(f' │  Aktualna  │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │  {plc2:02d} │'
           f' {plc2:02d} │  {plc2:02d} │   {plc2:04d}   │  {plc2:04d}  │  {plc2:04d} │')
     print(f' ├────────────┴─┬──┴────┴────┴─┬──┴────┴────┴────┬┴────┴────┬┴───┬──────┼────┬───┴──┬────┤')
-    print(f' │ Pt. Boh.: {plc2:02d} │ Pt. Det.: {plc2:02d} │ PP: {plc2:02d}  PS: {plc2:02d}  │ Szybkość │ {plc3[2]:02}'
+    print(f' │ Pt. Boh.: {plc2:02d} │ Pt. Det.: {plc2:02d} │ PP: {plc2:02d}  PS: {plc2:02d}  │ Szybkość │ {plc2:02d}'
           f' │ Chód │ {plc3[1]:02d} │ Bieg │ {plc3[0]:{fd}} │')
     print(f' └──────────────┴──────────────┴─────────────────┴──────────┴────┴──────┴────┴──────┴────┘')
+    print(wiad)
     #except ValueError:
        # fd = 2
 
@@ -91,11 +92,11 @@ def tabela():
        # pass
 
 
-
 test = "        "
 print(len(test))
 tabela()
 """
+# szuka długości nazwy profesji
 import Losowanie as Los
 ile = maks = 0
 nazwy = []
