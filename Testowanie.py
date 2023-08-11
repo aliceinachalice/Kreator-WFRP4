@@ -1,5 +1,7 @@
 ####################### Niezbędne elementy ##############################
+import time
 from random import randint
+import sys
 rasy = ('Człowiek', 'Krasnolud', 'Niziołek', 'Wysoki elf', 'Leśny elf')
 
 
@@ -8,8 +10,30 @@ def kosc(k=100):  # rzut kością
     return rzut
 
 
+def linia():
+    for i in range(10):
+
+        sys.stdout.write('\r\r               \r    \r             \r' + 'loading' + '.' * i)
+        time.sleep(1)
+        sys.stdout.flush()
+    print()
+
+
+
 def akceptacja(pytanie='Akceptujesz wynik rzutu? (T/N)', *args):
     # długość ciągu
+    # print(type(pytanie))
+    if type(pytanie) is tuple:
+        # print('is tuple')
+        pyt = str(pytanie[0][0])
+        args = []
+        for i in pytanie[0]:
+            args.append(i)
+            # print(f'0.{i}')
+        del args[0]
+        pytanie = pyt
+        # print(type(pytanie))
+    # print(f'pytanie: {pytanie}, args : {args}')
     if len(args) == 1:
         args = str(args[0])
     if len(args) == 0:
@@ -18,7 +42,7 @@ def akceptacja(pytanie='Akceptujesz wynik rzutu? (T/N)', *args):
         args.append('n')
     while True:
         try:
-            tresc = input('\n ' + pytanie + '\n ')
+            tresc = input(f'\n{pytanie}\n ')
             if tresc.lower() in args:
                 return tresc
             else:
@@ -57,45 +81,77 @@ class Postac:
 '''
 
 
-def tabela(wiad=''):
+def tabela(funk, *args):
     # Tabela ma szerokość 99 znaków plus spacja na początku jako odstęp od krawędzi okna.
-    line = '─'
-    plc = ''  # paceholder
-    plc2 = 0  # paceholder
-    plc3 = [15,16,'']
-    fd = '02d'
+    print(args)
+    print(funk)
+    def wewnatrz():
+        line = '─'
+        plc = ''  # paceholder
+        plc2 = 0  # paceholder
+        plc3 = [15,16,'']
+        fd = '02d'
 
-    #try:
+        #try:
 
-    print(' 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789')  # temp
-    print(f' ┌{line*87}┐')
-    print(f' │ Imię: {plc:35} Rasa: {rasa:21} Płeć: {plc:9} │')
-    print(f' ├{line * 87}┤')
-    print(f' │ Klasa: {plc:12} Profesja: {plc:22} Poziom: {plc:24} │')
-    print(f' ├{line*12}┬────┬────┬────┬────┬────┬────┬─────┬────┬─────┬{line*27}┤')
-    print(f' │   Cechy    │ WW │ US │  S │ Wt │  I │ Zw │ Int │ SW │ Ogd │       Doświadczenie       │')
-    print(f' ├────────────┼────┼────┼────┼────┼────┼────┼─────┼────┼─────┼──────────┬────────┬───────┤')
-    print(f' │ Początkowa │ {plc2:02} │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │  {plc2:02d} │'
-          f' {plc2:02d} │  {plc2:02d} │ Aktualne │ Wydane │ Razem │')
-    print(f' ├────────────┼────┼────┼────┼────┼────┼────┼─────┼────┼─────┼──────────┼────────┼───────┤')
-    print(f' │  Aktualna  │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │  {plc2:02d} │'
-          f' {plc2:02d} │  {plc2:02d} │   {plc2:04d}   │  {plc2:04d}  │  {plc2:04d} │')
-    print(f' ├────────────┴─┬──┴────┴────┴─┬──┴────┴────┴────┬┴────┴────┬┴───┬──────┼────┬───┴──┬────┤')
-    print(f' │ Pt. Boh.: {plc2:02d} │ Pt. Det.: {plc2:02d} │ PP: {plc2:02d}  PS: {plc2:02d}  │ Szybkość │ {plc2:02d}'
-          f' │ Chód │ {plc3[1]:02d} │ Bieg │ {plc3[0]:{fd}} │')
-    print(f' └──────────────┴──────────────┴─────────────────┴──────────┴────┴──────┴────┴──────┴────┘')
-    print(wiad)
-    #except ValueError:
-       # fd = 2
+        print(' 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789')  # temp
+        print(f' ┌{line*87}┐')
+        print(f' │ Imię: {plc:35} Rasa: {rasa:21} Płeć: {plc:9} │')
+        print(f' ├{line * 87}┤')
+        print(f' │ Klasa: {plc:12} Profesja: {plc:22} Poziom: {plc:24} │')
+        print(f' ├{line*12}┬────┬────┬────┬────┬────┬────┬─────┬────┬─────┬{line*27}┤')
+        print(f' │   Cechy    │ WW │ US │  S │ Wt │  I │ Zw │ Int │ SW │ Ogd │       Doświadczenie       │')
+        print(f' ├────────────┼────┼────┼────┼────┼────┼────┼─────┼────┼─────┼──────────┬────────┬───────┤')
+        print(f' │ Początkowa │ {plc2:02} │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │  {plc2:02d} │'
+              f' {plc2:02d} │  {plc2:02d} │ Aktualne │ Wydane │ Razem │')
+        print(f' ├────────────┼────┼────┼────┼────┼────┼────┼─────┼────┼─────┼──────────┼────────┼───────┤')
+        print(f' │  Aktualna  │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │ {plc2:02d} │  {plc2:02d} │'
+              f' {plc2:02d} │  {plc2:02d} │   {plc2:04d}   │  {plc2:04d}  │  {plc2:04d} │')
+        print(f' ├────────────┴─┬──┴────┴────┴─┬──┴────┴────┴────┬┴────┴────┬┴───┬──────┼────┬───┴──┬────┤')
+        print(f' │ Pt. Boh.: {plc2:02d} │ Pt. Det.: {plc2:02d} │ PP: {plc2:02d}  PS: {plc2:02d}  │ Szybkość │ {plc2:02d}'
+              f' │ Chód │ {plc3[1]:02d} │ Bieg │ {plc3[0]:{fd}} │')
+        print(f' └──────────────┴──────────────┴─────────────────┴──────────┴────┴──────┴────┴──────┴────┘')
+        #print(wiad)
+        funk(args)
 
-    #except IndexError:
-       # pass
+    return wewnatrz
 
 
 test = "        "
 print(len(test))
-tabela()
-"""
+obk = ("tekst", 't', 'y')
+yyy = (akceptacja, obk)
+rr = tabela(akceptacja, obk)
+rr()
+
+def method1():
+    return 'hello world'
+
+
+def method2(methodToRun):
+    result = methodToRun()
+    return result
+
+
+method2(method1)
+
+
+
+# wysłanie funkcji do funkcji
+def decorator(func):
+    def insideFunction():
+        print("This is inside function before execution")
+        func()
+    return insideFunction
+
+def func():
+    print("I am argument function")
+
+func_obj = decorator(func)
+func_obj()
+
+linia()
+'''
 # szuka długości nazwy profesji
 import Losowanie as Los
 ile = maks = 0
@@ -116,5 +172,4 @@ for i in range(0, len(Los.klasa)):
 
 print('------------------------------------------------------------------------------')
 print(f' Najdłuższa nazwa profesji to {nazwa} i ma {maks} znaków. Jest łączne {ile} profesji tej długości.\n'
-      f' Są to: {nazwy}')
-"""
+      f' Są to: {nazwy}')'''
