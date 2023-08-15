@@ -22,6 +22,7 @@ def gdzie():
 #################################
 # pd = pd_wyd = 0  # Doświadczenie zyskiwane w trakcie tworzenia
 # rasa = ''
+p_dodat = 0  # punkty na PP i PB
 rasy = ('Człowiek', 'Krasnolud', 'Niziołek', 'Wysoki elf', 'Leśny elf')
 
 # klasy
@@ -47,19 +48,48 @@ mod_r_elf = (30, 30, 20, 20, 40, 30, 30, 30, 30, 20)
 
 
 class Postac:
+    plec = ''
     rasa = ''
+    klasa_post = ''  # Dodanie wartości
     prof_post = ''
 
-    cechy_pocz = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    cechy_akt = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    cechy_pocz = [0, 0, 0, 0, 0, 0, 0, 0, 0]  # WW, US, S, Wt, In, Zw, Int, SW, Ogd
+    cechy_rozw = [0, 0, 0, 0, 0, 0, 0, 0, 0]  # dodanie wartości
+
+    pp = 0
+    pb = 0
+    szyb = 0
 
     pd = 0
     pd_wyd = 0
 
+    @property
+    def zyw(self):
+        if self.rasa == rasy[2]:
+            bs = 0
+        else:
+            bs = self.c_akt[2] // 10
+        bwt = self.c_akt[3] // 10
+        bsw = self.c_akt[7] // 10
+        return bs + (2 * bwt) + bsw
+
+    @property
+    def c_akt(self):  # WW, US, S, Wt, In, Zw, Int, SW, Ogd
+        ww = self.cechy_pocz[0] + self.cechy_rozw[0]
+        us = self.cechy_pocz[1] + self.cechy_rozw[1]
+        s = self.cechy_pocz[2] + self.cechy_rozw[2]
+        wt = self.cechy_pocz[3] + self.cechy_rozw[3]
+        ini = self.cechy_pocz[4] + self.cechy_rozw[4]
+        zw = self.cechy_pocz[5] + self.cechy_rozw[5]
+        inte = self.cechy_pocz[6] + self.cechy_rozw[6]
+        sw = self.cechy_pocz[7] + self.cechy_rozw[7]
+        ogd = self.cechy_pocz[8] + self.cechy_rozw[8]
+        return ww, us, s, wt, ini, zw, inte, sw, ogd
+
+
 #################################
 #           Narzędzia           #
 #################################
-
 
 def czysc():  # oczyść ekran
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -114,7 +144,7 @@ def grupa_prof():  # pozwala na ręczy wybór profesji
             tresc += f'{licz:2d}. {lista[licz - 1]:18}'
             licz += 1
         tresc += '\n  [N] - Następne'
-        wybrany = akceptacja(tresc, str(licz - 6), str(licz - 5), str(licz - 4),
+        wybrany = akceptacja(tresc, str(licz - 8), str(licz - 7), str(licz - 6), str(licz - 5), str(licz - 4),
                              str(licz - 3), str(licz - 2), str(licz - 1), 'n')
         if wybrany == 'n':  # nastęna grupa profesji
             if licz >= len(lista):  # zapętla na końcu listy
@@ -128,30 +158,30 @@ def tabela():
     # Tabela ma szerokość 99 znaków plus spacja na początku jako odstęp od krawędzi okna.
     line = '─'
     plc = ''  # paceholder
-    plc2 = 0  # paceholder
     cp = p.cechy_pocz
-    ca = p.cechy_akt
-
-    plc3 = [15, 16, '']  # temp
-    fd = '02d'  # temp
+    cr = p.cechy_rozw
+    ca = p.c_akt
 
     czysc()
 
     print(f' ┌{line*87}┐')
-    print(f' │ Imię: {plc:35} Rasa: {p.rasa:21} Płeć: {plc:9} │')
+    print(f' │ Imię: {plc:35} Rasa: {p.rasa:21} Płeć: {p.plec:9} │')
     print(f' ├{line * 87}┤')
-    print(f' │ Klasa: {plc:12} Profesja: {p.prof_post:22} Poziom: {plc:24} │')
+    print(f' │ Klasa: {p.klasa_post:12} Profesja: {p.prof_post:22} Poziom: {plc:24} │')
     print(f' ├{line*12}┬────┬────┬────┬────┬────┬────┬─────┬────┬─────┬{line*27}┤')
     print(f' │   Cechy    │ WW │ US │  S │ Wt │  I │ Zw │ Int │ SW │ Ogd │       Doświadczenie       │')
     print(f' ├────────────┼────┼────┼────┼────┼────┼────┼─────┼────┼─────┼──────────┬────────┬───────┤')
     print(f' │ Początkowa │ {cp[0]:02} │ {cp[1]:02d} │ {cp[2]:02d} │ {cp[3]:02d} │ {cp[4]:02d} │ {cp[5]:02d} │'
           f'  {cp[6]:02d} │ {cp[7]:02d} │  {cp[8]:02d} │ Aktualne │ Wydane │ Razem │')
     print(f' ├────────────┼────┼────┼────┼────┼────┼────┼─────┼────┼─────┼──────────┼────────┼───────┤')
+    print(f' │ Rozwinięcia│ {cr[0]:02d} │ {cr[1]:02d} │ {cr[2]:02d} │ {cr[3]:02d} │ {cr[4]:02d} │ {cr[5]:02d} │'
+          f'  {cr[6]:02d} │ {cr[7]:02d} │  {cr[8]:02d} │   {p.pd:4d}   │  {p.pd_wyd:4d}  │  {p.pd + p.pd_wyd:4d} │')
+    print(f' ├────────────┼────┼────┼────┼────┼────┼────┼─────┼────┼─────┼──────────┼────────┼───────┤')
     print(f' │  Aktualna  │ {ca[0]:02d} │ {ca[1]:02d} │ {ca[2]:02d} │ {ca[3]:02d} │ {ca[4]:02d} │ {ca[5]:02d} │'
-          f'  {ca[6]:02d} │ {ca[7]:02d} │  {ca[8]:02d} │   {p.pd:4d}   │  {p.pd_wyd:4d}  │  {p.pd+p.pd_wyd:4d} │')
+          f'  {ca[6]:02d} │ {ca[7]:02d} │  {ca[8]:02d} │ Żywotność│   {p.zyw:2}   │  {plc:4} │')
     print(f' ├────────────┴─┬──┴────┴────┴─┬──┴────┴────┴────┬┴────┴────┬┴───┬──────┼────┬───┴──┬────┤')
-    print(f' │ Pt. Boh.: {plc2:02d} │ Pt. Det.: {plc2:02d} │ PP: {plc2:02d}  PS: {plc2:02d}  │ Szybkość │ {plc2:02d}'
-          f' │ Chód │ {plc3[1]:02d} │ Bieg │ {plc3[0]:{fd}} │')
+    print(f' │ Pt. Boh.: {p.pb:2d} │ Pt. Det.: {p.pb:02d} │ PP: {p.pp:2d}  PS: {p.pp:02d}  │ Szybkość │ {p.szyb:2}'
+          f' │ Chód │ {p.szyb*2:2d} │ Bieg │ {p.szyb*4:2d} │')
     print(f' └──────────────┴──────────────┴─────────────────┴──────────┴────┴──────┴────┴──────┴────┘')
     print(f' {wiad}')
 
@@ -335,7 +365,7 @@ else:  # ponowne wykonanie rzutu lub ręczny wybór
     # dodać tu pętlę while do kolejnych rzutów?
     k100 = kosc()
     prop_rasa = los_rasy(k100)
-    wiad = f' RASA Wynik: {k100:02d} - {prop_rasa}                {gdzie()}'  # Wiad: tekst wyświetlany w tabeli
+    wiad = f' RASA                            {gdzie()}'  # Wiad: tekst wyświetlany w tabeli
     if akceptacja(' Nowy rzut [N], czy ręczny wybór [R]?', 'n', 'r') == 'n':  # nowy rzut na rasę
         p.rasa = prop_rasa  # ostateczny wybór
     else:  # Samodzielny wybór rasy
@@ -344,16 +374,27 @@ else:  # ponowne wykonanie rzutu lub ręczny wybór
         reczny_wybor = akceptacja(tekst, '1', '2', '3', '4', '5')
         p.rasa = rasy[int(reczny_wybor) - 1]
 
-if p.rasa == rasy[0]:  # modyfikator rasowy
+if p.rasa == rasy[0]:  # modyfikator rasowy, PP, PB, Szybkość
     mod_rasowy = mod_r_ludz
+    p.pp = 2
+    p.pb = 1
+    p.szyb = 4
+    p_dodat = 3
 elif p.rasa == rasy[1]:
     mod_rasowy = mod_r_kras
+    p.pb = 2
+    p.szyb = 3
+    p_dodat = 2
 elif p.rasa == rasy[2]:
     mod_rasowy = mod_r_niz
+    p.pb = 2
+    p.szyb = 3
+    p_dodat = 3
 elif p.rasa == rasy[3] or rasy[4]:
     mod_rasowy = mod_r_elf
+    p.szyb = 5
+    p_dodat = 2
 # dodanie rasy do klasy Postac()
-# XXX.X = rasa_postaci
 
 # PROFESJA
 # 1. Rzut k 100
@@ -378,7 +419,7 @@ else:  # wykonanie dodatkowych rzutów lub ręczny wybór
         p.pd += 25
     else:  # funkcje ręcznego wyboru
         prof_rasowe()
-        prof_post = grupa_prof()
+        p.prof_post = grupa_prof()
 
 
 print(p.rasa, p.prof_post, 'PD : ', p.pd)  # temp
@@ -469,8 +510,16 @@ else:
 
 for i in range(0, 9):  # Dodanie ostatecznych wartości cech do klasy Postac
     p.cechy_pocz[i] = rzuty[i] + mod_rasowy[i]
-    p.cechy_akt[i] = rzuty[i] + mod_rasowy[i]
 
+# Rozdanie punktów dodatkowych na PP i PB
+if p_dodat == 3:
+    zakresy = (0, 1, 2, 3)
+else:
+    zakresy = (0, 1, 2)
+wiad = f' Masz {p_dodat} punkty do rozdania na Punkty Przeznaczenia i Punkty Bohatera.'
+wybor = akceptacja(' Ile wydasz na PP?', zakresy)
+p.pp += int(wybor)
+p.pb += p_dodat - int(wybor)
 
 # Podsumowanie wyników.
 wiad = ''  # temp
