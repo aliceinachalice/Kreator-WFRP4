@@ -5,6 +5,11 @@ import os  # na potrzebę czysc()
 #       Tymczasowe          #
 #############################
 import inspect
+import profesje as pr
+
+
+class Empty:  # temp
+    nazwa = nazwa_poz = ['', '']
 
 
 def gdzie():
@@ -27,16 +32,19 @@ tab_gl = True  # dla tabeli umiejętności
 rasy = ('Człowiek', 'Krasnolud', 'Niziołek', 'Wysoki elf', 'Leśny elf')
 
 # klasy
-uczeni = ('Aptekarka', "Czarodziej", 'Inżynier', 'Kapłan', 'Medyczka', 'Mniszka', 'Prawniczka', 'Uczony')
-mieszczanie = ('Agitator', "Kupiec", 'Mieszczka', 'Rzemieślniczka', 'Strażnik', 'Szczurołap', 'Śledczy', 'Żebrak')
-dworzanie = ('Artystka', 'Doradca', 'Poseł', 'Namiestnik', 'Służąca', 'Szlachcic', 'Szpieg', 'Zwadźca')
-pospolstwo = ('Chłopka', 'Górnik', 'Guślarz', 'Łowczyni', 'Mistyczka', 'Zarządca', 'Zielarka', 'Zwiadowca')
-wedrowcy = ('Biczownik', 'Domokrążca', 'Kuglarka', 'Łowca Czarownic', 'Łowczyni Nagród', 'Posłaniec',
-            'Strażniczka Dróg', 'Woźnica')
-wodniacy = ('Doker', 'Flisak', 'Pilotka Rzeczna', 'Pirat Rzeczny', 'Przemytniczka', 'Przewoźnik', 'Strażnik Rzeczny',
-            'Żeglarz')
-lotry = ('Banita', 'Czarownica', 'Hiena Cmentarna', 'Paser', 'Rajfur', 'Rekietierka', 'Szarlatan', 'Złodziej')
-wojownicy = ('Gladiator', 'Kapłan Bitewny', 'Kawalerzysta', 'Ochroniarz', 'Oprych', 'Rycerz', 'Zabójca', 'Żołnierz')
+# uczeni = ('Aptekarka', "Czarodziej", 'Inżynier', 'Kapłan', 'Medyczka', 'Mniszka', 'Prawniczka', 'Uczony')
+uczeni = (pr.Aptekarka, pr.Czarodziej, pr.Inzynier, pr.Kaplan, pr.Medyczka, pr.Mniszka, pr.Prawniczka, pr.Uczony)
+mieszczanie = (pr.Agitator, pr.Kupiec, pr.Mieszczka, pr.Rzemieslniczka, pr.Straznik, pr.Szczurolap, pr.Sledczy,
+               pr.Zebrak)
+dworzanie = (pr.Artystka, pr.Doradca, pr.Posel, pr.Namiestnik, pr.Sluzaca, pr.Szlachcic, pr.Szpieg, pr.Zwadzca)
+pospolstwo = (pr.Chlopka, pr.Gornik, pr.Guslarz, pr.Lowczyni, pr.Mistyczka, pr.Zarzadca, pr.Zielarka, pr.Zwiadowca)
+wedrowcy = (pr.Biczownik, pr.Domokrazca, pr.Kuglarka, pr.LowcaCzarownic, pr.LowczyniNagrod, pr.Poslaniec,
+            pr.StrazniczkaDrog, pr.Woznica)
+wodniacy = (pr.Doker, pr.Flisak, pr.PilotkaRzeczna, pr.PiratRzeczny, pr.Przemytniczka, pr.Przewoznik,
+            pr.StraznikRzeczny, pr.Zeglarz)
+lotry = (pr.Banita, pr.Czarownica, pr.HienaCmentarna, pr.Paser, pr.Rajfur, pr.Rekietierka, pr.Szarlatan, pr.Zlodziej)
+wojownicy = (pr.Gladiator, pr.KaplanBitewny, pr.Kawalerzysta, pr.Ochroniarz, pr.Oprych, pr.Rycerz, pr.Zabojca,
+             pr.Zolnierz)
 klasa = (uczeni, mieszczanie, dworzanie, pospolstwo, wedrowcy, wodniacy, lotry, wojownicy)
 # prof_post = ''
 lista = []  # używane do ręcznego wyboru profesji
@@ -52,8 +60,8 @@ mod_r_elf = (30, 30, 20, 20, 40, 30, 30, 30, 30, 20)
 class Postac:
     plec = ''
     rasa = ''
+    prof = None
     klasa_post = ''  # Dodanie wartości
-    prof_post = ''
 
     cechy_pocz = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # WW, US, S, Wt, In, Zw, Zr, Int, SW, Ogd
     cechy_rozw = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # dodanie wartości
@@ -93,7 +101,12 @@ class Postac:
     dowo = ['Dowodzenie', 'Ogd', 0]  # Podstawowa
     haza = ['Hazard', 'Int', 0]  # Podstawowa
     intu = ['Intuicja', 'I', 0]  # Podstawowa
-    jezd = ['Jeździectwo', 'Zw', 0]  # Podstawowa
+
+    jezk = ['Jeździectwo (Konie)', 'Zw', 0]  # Podstawowa / Konie
+    jezg = ['Jeździectwo (Gryfy)', 'Zw', 0]  # Gryfy
+    jezp = ['Jeździectwo (Pegazy)', 'Zw', 0]  # Pegazy
+    jezs = ['Jeździectwo (Półgryfy)', 'Zw', 0]  # Półgryfy
+    jezw = ['Jeździectwo (Wielkie Wilki)', 'Zw', 0]  # Wielkie Wilki
 
     jezy = ['Język (Reikspiel)', 'Int', 0]  # Specjalizacje: Reikspiel
     jalb = ['Język (Albioński)', 'Int', 0]  # Albioński
@@ -111,6 +124,7 @@ class Postac:
     jnrs = ['Język (Norsmeński)', 'Int', 0]  # Norsmeński
     jskv = ['Język (Queekish)', 'Int', 0]  # Queekish(skav)
     jtil = ['Język (Tileański)', 'Int', 0]  # Tileański
+    jgil = ['Język (Gildii)', 'Int', 0]  # Gildii
     jzlo = ['Język (Złodziejski)', 'Int', 0]  # Złodziejska grypsera
 
     kugl = ['Kuglarstwo', 'Zw', 0]
@@ -138,23 +152,38 @@ class Postac:
     prze = ['Przekupstwo', 'Ogd', 0]  # Podstawowa
     plyw = ['Pływanie', 'S', 0]
 
-    rapt = ['Rzem. (Aptekarstwo)', 'Zr', 0]  # Aptekarstwo
-    rbal = ['Rzem. (Balsamowanie)', 'Zr', 0]  # Balsamowanie
+    rapt = ['Rzemiosło (Aptekarstwo)', 'Zr', 0]  # Aptekarstwo
+    rbal = ['Rzemiosło (Balsamowanie)', 'Zr', 0]  # Balsamowanie
     rgrb = ['Rzemiosło (Garbarstwo)', 'Zr', 0]  # Garbarstwo
     rgot = ['Rzemiosło (Gotowanie)', 'Zr', 0]  # Gotowanie
     rkal = ['Rzemiosło (Kaligrafa)', 'Zr', 0]  # Kaligrafa
     rkow = ['Rzemiosło (Kowalstwo)', 'Zr', 0]  # Kowalstwo
-    rswi = ['Rzem. (Świecarstwo)', 'Zr', 0]  # Świecarstwo
-    rgar = ['Rzem. (Garncarstwo)', 'Zr', 0]  # Garncarstwo
-    rkam = ['Rzem. (Kamieniarstwo)', 'Zr', 0]  # Kamieniarstwo
+    rswi = ['Rzemiosło (Świecarstwo)', 'Zr', 0]  # Świecarstwo
+    rgar = ['Rzemiosło (Garncarstwo)', 'Zr', 0]  # Garncarstwo
+    rkam = ['Rzemiosło (Kamieniarstwo)', 'Zr', 0]  # Kamieniarstwo
+    rtru = ['Rzemiosło (Truciciel)', 'Zr', 0]  # Truciciel
 
-    sekr = ['Sekretne Znaki', 'Int', 0]
+    scch = ['Sekretne Znaki (Cechu)', 'Int', 0]  # Cechu
+    skoc = ['Sekretne Znaki (Kol. Cienia)', 'Int', 0]  # Kolegium Cienia
+    slow = ['Sekretne Znaki (Łowców)', 'Int', 0]  # Łowców
+    swed = ['Sekretne Znaki (Włóczęgów)', 'Int', 0]  # Włóczęgów
+    szlo = ['Sekretne Znaki (Złodziei)', 'Int', 0]  # Złodziei
+    szwd = ['Sekretne Znaki (Zwiadowców)', 'Int', 0]  # Zwiadowców
 
     skrp = ['Skradanie (Podziemia)', 'Zw', 0]  # Podstawowa Podziemia
     skrm = ['Skradanie (Miasto)', 'Zw', 0]  # Podstawowa Miasto
     skrw = ['Skradanie (Wieś)', 'Zw', 0]  # Podstawowa Wieś
 
-    splm = ['Splatanie Magii', 'SW', 0]
+    splm = ['Splatanie Magii (Aqshy)', 'SW', 0]  # Ogólne
+    smaq = ['Splatanie Magii (Aqshy)', 'SW', 0]  # (Aqshy)
+    smaz = ['Splatanie Magii (Azyr)', 'SW', 0]  # (Azyr)
+    smch = ['Splatanie Magii (Chamon)', 'SW', 0]  # (Chamon)
+    smdr = ['Splatanie Magii (Dhar)', 'SW', 0]  # (Dhar)
+    smgr = ['Splatanie Magii (Ghur)', 'SW', 0]  # (Ghur)
+    smgn = ['Splatanie Magii (Ghyran)', 'SW', 0]  # (Ghyran)
+    smhy = ['Splatanie Magii (Hysh)', 'SW', 0]  # (Hysh)
+    smsh = ['Splatanie Magii (Shyish)', 'SW', 0]  # (Shyish)
+    smul = ['Splatanie Magii (Ulgu)', 'SW', 0]  # (Ulgu)
 
     sztu = ['Sztuka', 'Zr', 0]  # Podstawowa
 
@@ -164,15 +193,19 @@ class Postac:
     trop = ['Tropienie', 'I', 0]
     unik = ['Unik', 'Zw', 0]  # Podstawowa
 
-    wgeo = ['Wiedza (Geologia)', 'Int', 0]  # Specjalizacje: Geologia
+    wchm = ['Wiedza (Chemia)', 'Int', 0]  # Specjalizacje: Chemia
+    wgeo = ['Wiedza (Geologia)', 'Int', 0]  # Geologia
     wher = ['Wiedza (Heraldyka)', 'Int', 0]  # Heraldyka
     whis = ['Wiedza (Historia)', 'Int', 0]  # Historia
     winz = ['Wiedza (Inżynieria)', 'Int', 0]  # Inżynieria
     wmag = ['Wiedza (Magia)', 'Int', 0]  # Magia
+    wmed = ['Wiedza (Medycyna)', 'Int', 0]  # Medycyna
     wmet = ['Wiedza (Metalurgia)', 'Int', 0]  # Metalurgia
     wnau = ['Wiedza (Nauka)', 'Int', 0]  # Nauka
     wpra = ['Wiedza (Prawo)', 'Int', 0]  # Prawo
+    wros = ['Wiedza (Rośliny)', 'Int', 0]  # Rośliny
     wteo = ['Wiedza (Teologia)', 'Int', 0]  # Teologia
+    wwoj = ['Wiedza (Wojna)', 'Int', 0]  # Wojna
     wimp = ['Wiedza (Reikland)', 'Int', 0]  # Reikland
     wkrs = ['Wiedza (Krasnoludy)', 'Int', 0]  # Wiedza (Krasnoludy)
 
@@ -239,6 +272,18 @@ class Postac:
 
         cale = cecha + um[2]
         return cecha, cale  # wart. cechy, całkowita wartość umiejętności
+
+    @property
+    def nazwy(self):
+        """ Nazwy wywodzące się z klasy postaci. -> nazwy[nazwa_profesji, nazwa_poziomu_postaci]"""
+        if self.plec is True:  # True to facet
+            f = 0  # zmienna do pozycji listy nazwy
+        else:
+            f = 1  # zmienna do pozycji listy nazwy
+        if self.prof is None:
+            return '', ''
+        else:
+            return self.prof.nazwa[f], self.prof.Poz1.nazwa_poz[f]
 
 
 #################################
@@ -328,7 +373,7 @@ def tabela():
     print(f' ┌{line*92}┐')
     print(f' │ Imię: {plc:36} Rasa: {p.rasa:21} Płeć: {p.plec:13} │')
     print(f' ├{line * 92}┤')
-    print(f' │ Klasa: {p.klasa_post:14} Profesja: {p.prof_post:24} Poziom: {plc:25} │')
+    print(f' │ Klasa: {p.klasa_post:14} Profesja: {p.nazwy[0]:24} Poziom: {p.nazwy[1]:25} │')
     print(f' ├{line*12}┬────┬────┬────┬────┬────┬────┬────┬─────┬────┬─────┬{line*27}┤')
     print(f' │   Cechy    │ WW │ US │  S │ Wt │  I │ Zw │ Zr │ Int │ SW │ Ogd │       Doświadczenie       │')
     print(f' ├────────────┼────┼────┼────┼────┼────┼────┼────┼─────┼────┼─────┼──────────┬────────┬───────┤')
@@ -336,7 +381,8 @@ def tabela():
           f' {cp[6]:02d} │  {cp[7]:02d} │ {cp[8]:02d} │  {cp[9]:02d} │ Aktualne │ Wydane │ Razem │')
     print(f' ├────────────┼────┼────┼────┼────┼────┼────┼────┼─────┼────┼─────┼──────────┼────────┼───────┤')
     print(f' │ Rozwinięcia│ {cr[0]:02d} │ {cr[1]:02d} │ {cr[2]:02d} │ {cr[3]:02d} │ {cr[4]:02d} │ {cr[5]:02d} │'
-          f' {cr[6]:02d} │  {cr[7]:02d} │ {cr[8]:02d} │  {cr[9]:02d} │   {p.pd:4d}   │  {p.pd_wyd:4d}  │  {p.pd + p.pd_wyd:4d} │')
+          f' {cr[6]:02d} │  {cr[7]:02d} │ {cr[8]:02d} │  {cr[9]:02d} │   {p.pd:4d}   │  {p.pd_wyd:4d}  │'
+          f'  {p.pd + p.pd_wyd:4d} │')
     print(f' ├────────────┼────┼────┼────┼────┼────┼────┼────┼─────┼────┼─────┼──────────┴┬───────┼───────┤')
     print(f' │  Aktualna  │ {ca[0]:02d} │ {ca[1]:02d} │ {ca[2]:02d} │ {ca[3]:02d} │ {ca[4]:02d} │ {ca[5]:02d} │'
           f' {ca[6]:02d} │  {ca[7]:02d} │ {ca[8]:02d} │  {ca[9]:02d} │ Żywotność │  {p.zyw:2}   │  {plc:4} │')
@@ -355,16 +401,18 @@ def tab_um():
     plc = ''
 
     # lista umiejętności podstawowych (na zewnątrz?)
-    um_podst = [p.atle, p.bbia, p.bbij, p.char, p.dowo, p.haza, p.intu, p.jezd, p.mglo, p.nawi, p.odpo, p.opan, p.oswa,
+    um_podst = [p.atle, p.bbia, p.bbij, p.char, p.dowo, p.haza, p.intu, p.jezk, p.mglo, p.nawi, p.odpo, p.opan, p.oswa,
                 p.perc, p.plot, p.powo, p.prze, p.skrm, p.skrw, p.sztu, p.sprz, p.targ, p.unik, p.wios, p.wspi, p.wsak,
                 p.wsga, p.wsko, p.wssp, p.zast]
     # lista umiejętności zaawansowanych (na zewnątrz?)
     um_zaaw = [p.bada, p.bdrz, p.bdwr, p.bkaw, p.bcep, p.bpar, p.bszr, p.bzpr, p.bzlu, p.bzku, p.bzmi, p.bzop, p.bzmw,
-               p.bzps, p.bzex, p.jezy, p.jalb, p.jbit, p.jbrt, p.jelf, p.jest, p.jork, p.jkis, p.jjkr, p.jkrs, p.jkls,
-               p.jniz, p.jmag, p.jnrs, p.jskv, p.jtil, p.jzlo, p.kugl, p.lecz, p.modl, p.mdud, p.muhr, p.mulu, p.muob,
-               p.musk, p.mufl, p.opzw, p.otza, p.plyw, p.rapt, p.rbal, p.rgrb, p.rgot, p.rkal, p.rkow, p.rswi, p.rgar,
-               p.rkam, p.sekr, p.skrp, p.splm, p.tres, p.trop, p.wgeo, p.wher, p.whis, p.winz, p.wmag, p.wmet, p.wnau,
-               p.wpra, p.wteo, p.wimp, p.wkrs, p.wycn, p.zpul, p.zwpa, p.zegl]
+               p.bzps, p.bzex, p.jezg, p.jezp, p.jezs, p.jezw, p.jezy, p.jalb, p.jbit, p.jbrt, p.jelf, p.jest, p.jork,
+               p.jkis, p.jjkr, p.jkrs, p.jkls, p.jniz, p.jmag, p.jnrs, p.jskv, p.jtil, p.jzlo, p.kugl, p.lecz, p.modl,
+               p.mdud, p.muhr, p.mulu, p.muob, p.musk, p.mufl, p.opzw, p.otza, p.plyw, p.rapt, p.rbal, p.rgrb, p.rgot,
+               p.rkal, p.rkow, p.rswi, p.rgar, p.rkam, p.rtru, p.scch, p.skoc, p.slow, p.swed, p.szlo, p.szwd, p.skrp,
+               p.splm, p.smaq, p.smaz, p.smch, p.smdr, p.smgr, p.smgn, p.smhy, p.smsh, p.smul, p.tres, p.trop, p.wchm,
+               p.wgeo, p.wher, p.whis, p.winz, p.wmag, p.wmed, p.wmet, p.wnau, p.wpra, p.wros, p.wteo, p.wwoj, p.wimp,
+               p.wkrs, p.wycn, p.zpul, p.zwpa, p.zegl]
     # lista umiejętności do tabeli - kopia podstawowych
     um_tab = um_podst.copy()
     # pętla sprawdza kolejne um. zaawansowane, czy mają rozwinięcia
@@ -608,7 +656,7 @@ def rozw_um_start():  # przydział rozwinięć Umiejętności na start
 #####################################
 #       Tworzenie postaci           #
 #####################################
-p = Postac()
+p = Postac()  # nowa tworzona postać
 
 # RASA
 # 1. Rzut k100
@@ -676,9 +724,9 @@ elif p.rasa == rasy[4]:
 k100 = kosc()
 # 2. Wybór listy na podstawie rasy
 prof1 = profesje(k100, p.rasa)
-wiad = f' PROFESJA Wynik: {k100:02d} - {prof1}                {gdzie()}'  # Wiad - zmienna tekstu wyświetlana w tabeli
+wiad = f' PROFESJA Wynik: {k100:02d} - {prof1.nazwa[0]}                {gdzie()}'  # Wiad - zmienna tekstu wyświetlana w tabeli
 if akceptacja() == 't':
-    p.prof_post = prof1
+    p.prof = prof1
     p.pd += 50  # pd za wybór pierwszego rzutu
 else:  # wykonanie dodatkowych rzutów lub ręczny wybór
     k100b = kosc()
@@ -686,8 +734,8 @@ else:  # wykonanie dodatkowych rzutów lub ręczny wybór
     prof2 = profesje(k100b, p.rasa)
     prof3 = profesje(k100c, p.rasa)
     wiad = ' PROFESJA'
-    tekst = (f' Czy któryś z tych rzutów jest satysfakcjonujący?\n  {k100:02d}. {prof1:18} {k100b:02d}. {prof2:18}'
-             f' {k100c:02d}. {prof3:18}\n  [R] - Ręczny wybór')
+    tekst = (f' Czy któryś z tych rzutów jest satysfakcjonujący?\n  {k100:02d}. {prof1.nazwa[0]:18}'
+             f' {k100b:02d}. {prof2.nazwa[0]:18} {k100c:02d}. {prof3.nazwa[0]:18}\n  [R] - Ręczny wybór')
     reczny_wybor = akceptacja(tekst, str(k100), str(k100b), str(k100c), 'r')
     if reczny_wybor != 'r':  # wybrano jeden z rzutów
         prof_post = profesje(int(reczny_wybor), p.rasa)
@@ -697,7 +745,6 @@ else:  # wykonanie dodatkowych rzutów lub ręczny wybór
         p.prof_post = grupa_prof()
 
 
-print(p.rasa, p.prof_post, 'PD : ', p.pd)  # temp
 # 5. /    Kolejne rzutu z innymi pd
 
 # ATRYBUTY
@@ -799,6 +846,9 @@ p.pb += p_dodat - int(wybor)
 # Rozwój cech na podstawie profesji - 5 pt. do podziału
 
 # Rozwój umiejętności na podstawie rasy
+"""Uwaga: jeśli przy Talencie lub Umiejętności widnieje oznaczenie „(Dowolne)”,oznacza to, że możesz wybrać
+ jedną z opcji danego Talentu lub danej Umiejętności na tym poziomie Profesji. Zatem Wiedza (Dowolna) to może być
+Wiedza (Geografa), Wiedza (Wiedza Ludowa), Wiedza (Magia) albo dowolny inny, podobnyprzykład. """
 rozw_um_start()
 
 # Talenty (też z rasy)
