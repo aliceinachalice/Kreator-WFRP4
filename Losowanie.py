@@ -8,7 +8,7 @@ import inspect
 import profesje as pr
 
 
-class Empty:  # temp
+class Empty:  # tem
     nazwa = nazwa_poz = ['', '']
 
 
@@ -30,7 +30,6 @@ def gdzie():
 p_dodat = 0  # punkty na PP i PB
 tab_gl = True  # dla tabeli umiejętności
 rasy = ('Człowiek', 'Krasnolud', 'Niziołek', 'Wysoki elf', 'Leśny elf')
-
 # klasy
 # uczeni = ('Aptekarka', "Czarodziej", 'Inżynier', 'Kapłan', 'Medyczka', 'Mniszka', 'Prawniczka', 'Uczony')
 uczeni = (pr.Aptekarka, pr.Czarodziej, pr.Inzynier, pr.Kaplan, pr.Medyczka, pr.Mniszka, pr.Prawniczka, pr.Uczony)
@@ -58,7 +57,7 @@ mod_r_elf = (30, 30, 20, 20, 40, 30, 30, 30, 30, 20)
 
 
 class Postac:
-    plec = ''
+    plec = 2
     rasa = ''
     prof = None
     klasa_post = ''  # Dodanie wartości
@@ -224,6 +223,16 @@ class Postac:
     zegl = ['Żeglarstwo', 'Zw', 0]
 
     @property
+    def ple(self):
+        if self.plec == 0:
+            rodzaj = "Mężczyzna"
+        elif self.plec == 1:
+            rodzaj = "Kobieta"
+        else:
+            rodzaj = ''
+        return rodzaj
+
+    @property
     def zyw(self):
         if self.rasa == rasy[2]:
             bs = 0
@@ -244,7 +253,7 @@ class Postac:
         zr = self.cechy_pocz[6] + self.cechy_rozw[6]
         inte = self.cechy_pocz[7] + self.cechy_rozw[7]
         sw = self.cechy_pocz[8] + self.cechy_rozw[8]
-        ogd = self.cechy_pocz[5] + self.cechy_rozw[9]
+        ogd = self.cechy_pocz[9] + self.cechy_rozw[9]
         return ww, us, s, wt, ini, zw, zr, inte, sw, ogd
 
     def umiej(self, um):  # Końcowe wartości umiejętności
@@ -367,11 +376,13 @@ def tabela():
     cp = p.cechy_pocz
     cr = p.cechy_rozw
     ca = p.c_akt
+    pl = p.plec
+    # uwzględnić w tabelce
 
     czysc()
 
     print(f' ┌{line*92}┐')
-    print(f' │ Imię: {plc:36} Rasa: {p.rasa:21} Płeć: {p.plec:13} │')
+    print(f' │ Imię: {plc:36} Rasa: {p.rasa:21} Płeć: {p.ple:13} │')
     print(f' ├{line * 92}┤')
     print(f' │ Klasa: {p.klasa_post:14} Profesja: {p.nazwy[0]:24} Poziom: {p.nazwy[1]:25} │')
     print(f' ├{line*12}┬────┬────┬────┬────┬────┬────┬────┬─────┬────┬─────┬{line*27}┤')
@@ -718,6 +729,20 @@ elif p.rasa == rasy[4]:
     p_dodat = 2
     um_start = [p.atle, p.bbia, p.bzlu, p.jelf, p.odpo, p.perc, p.skrw, p.sprz, p.trop, p.wspi, p.wssp, p.zast]
     # miejsce na talenty
+
+#PŁEĆ
+k2 = randint(0,1)
+
+p.plec = k2
+
+wiad = f'Wylosowano płeć: {p.ple}.'
+wybor = akceptacja()
+print(f'wybór: {wybor}, płeć: {p.plec}')
+if wybor == "n":
+    if p.plec == 0:
+        p.plec = 1
+    else:
+        p.plec = 0
 
 # PROFESJA
 # 1. Rzut k 100
